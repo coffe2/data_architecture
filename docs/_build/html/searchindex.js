@@ -1,0 +1,1 @@
+Search.setIndex({envversion:47,filenames:["adam","index"],objects:{},objnames:{},objtypes:{},terms:{"\uac80\uc0c9":1,"\ubaa8\ub4c8":1,"\ubaa9\ub85d":1,"\uc0c9\uc778":1,"\ud398\uc774\uc9c0":1,content:1},titles:["adam module","Welcome to data_architecture&#8217;s documentation!"],titleterms:{adam:0,data_architectur:1,document:1,indic:1,modul:0,tabl:1,welcom:1}})
