@@ -137,3 +137,92 @@ def login(user_id, passwd, logger):
         return False
 
     return session_key
+
+def add_schedule(doc_user, date, schedule, logger):
+    """add one or more schedule to the user's list.
+
+    :param doc_user: user document (DB)
+    :type doc_user:
+    :param date: date
+    :type date: str
+    :param event: event list to add
+    :type event: list
+    :param logger: logger instance
+    :type logger: logging.Logger
+    :return: True or False added day events
+    :rtype: bool
+    """
+    #my_calendar = col_calendar.find_one({"User": doc_user["_id"]})
+    my_calendar = col_calendar.find_one({"User": doc_user["_id"]})
+    if my_calendar == None:
+        logger.info('{}: calendar start'.format(doc_user["user_id"]))
+        my_calendar = {"User": doc_user["_id"],
+            "schedules": []}
+        col_calendar.insert_one(my_calendar)
+
+    if not schedule:
+        return False
+
+    if len(schedule) > 5:
+        logger.info('{}: day schedules are already full'.format(
+            doc_user["user_id"]))
+        return False
+
+    ret = 0
+    for s in schedule:
+        my_calendar["schedules"] += [{"date": date,
+                                      "events_list": [s]}]
+        logger.info('{}: {} added into schedule'.format(
+            date, s))
+        ret += 1
+
+    if ret >= 1:
+        col_calendar.find_one_and_replace({"User": doc_user["_id"]}, my_calendar)
+
+    return True
+
+def show_daySchedule(doc_user, date, logger):
+    """return schedule for the date selected by the user.
+
+    :param doc_user: user document (DB)
+    :type doc_user:
+    :param date: selected date
+    :type date: datetime
+    :param logger: logger instance
+    :type logger: logging.Logger
+    :return: a list of chosen date schedules
+    :rtype: list
+    """
+    ret = []
+    my_calendar = col_calendar.find_one({"User": doc_user["_id"]})
+    if my_calendar != None:
+        ret = my_calendar["schedules"]
+
+    show_events = []
+    if ret:
+        for schedule in ret:
+            if schedule["date"] == date:
+                show_events += schedule["event"]
+    logger.info('{}: show chosen date schedule list = {}'.format(date, show_events))
+
+    return show_events
+
+def check_professor(doc_user):
+    """return check you are a professor
+
+    :param doc_user: user document (DB)
+    :type doc_user:
+    :return: True or False
+    :rtype: bool
+    """
+    info = doc_user["user_info"]
+    my_sharing_calendar = col_sharing.find_one({"User": doc_user["_id"]})
+    if info["professor"]:
+        logger.info('{}: sharing calendar start'.format(
+            doc_user["user_id"]))
+        my_sharing_calendar = {"User": doc_user["_id"],
+                               "schedules": []}
+        col_sharing.insert_one(my_sharing_calendar)
+        return True
+    
+    return False
