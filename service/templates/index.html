@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+        <meta charset="UTF-8">
+        <title>Calendar for UnivStudent</title>
+</head>
+<body>
+        <div class='page-header'>
+                <h3>Menu bar</h3>
+                <div class='Menu-bar'>
+                        <ul class='menu-bar'>
+                                <li><a href="{{url_for('web_login')}}">Login</a></li>
+                        </ul>
+                </div>
+                <hr/>
+        </div>
+        <div class='content container'>
+                {% block content %}
+                <form method="post" enctype="multipart/form-data" action="/handle-login">
+                        User ID:
+                        <input type="text" id="user_id" name="user_id"/>
+                        Password:
+                        <input type="password" id="passwd" name="passwd"/>
+                        <input type="submit" value="Login" id="login_button" name="login_button"/>
+                </form>
+                {% endblock %}
+        </div>
+</body>
+</html>
