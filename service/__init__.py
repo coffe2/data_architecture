@@ -105,3 +105,42 @@ def calendar():
     loggers['calendar'].info('{}: day schedule = {}'.format(
         session_id, ret))
     return ret
+
+@app.route('/')
+def web_login():
+    return render_template("index.html")
+
+@app.route('/handle-login', methods=["POST"])
+def handle_login():
+    """Login function for web service.
+
+    :return: HTML document (render_template() result)
+    :rtype: str
+    """
+    user_id = request.values.get('user_id')
+    passwd = request.values.get('passwd')
+    loggers['login'].info('{}: login(web)'.format(user_id))
+
+    ret = {"result": None,
+           "session_id": None,
+           "service_type": "login",
+           "msg": ""}
+
+    session_key = user.login(user_id, passwd, loggers['login'])
+    loggers['login'].info('{}: session_key = {}'.format(user_id, session_key))
+    if not session_key:
+        ret["result"] = False
+        ret["msg"] = "Failed to login"
+    else:
+        ret["result"] = True
+        ret["session_id"] = session_key["session_id"]
+
+    loggers['login'].info('{}: login(web) result = {}'.format(user_id, ret))
+
+    if not ret["result"]:
+        return render_template("login_failed.html")
+
+    ret_json = json_util.dumps(ret, ensure_ascii=False)
+
+    return render_template("calendar.html",
+            session_info=ret_json)
