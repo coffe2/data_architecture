@@ -1,5 +1,5 @@
-#from flask import Flask
-#from flask import request
+from flask import Flask
+from flask import request
 import os
 from src import user, mylogger, myconfig
 import datetime
@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # create a logger.
 project_root_path = os.getenv("DATA_ARCHITECTURE")
-cfg = myconfig.get_config('{}/share/project.config'.format(
+cfg = myconfig.get_config('{}/share/calendar.config'.format(
     project_root_path))
 log_directory = cfg['logger'].get('log_directory')
 loggers = dict()

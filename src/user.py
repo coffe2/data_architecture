@@ -17,7 +17,6 @@ db_client = MongoClient(db_ip, db_port)
 db = db_client[db_name]
 
 col_user = db[cfg['db']['col_user']]
-col_scheduling = db[cfg['db']['col_scheduling']]
 col_calendar = db[cfg['db']['col_calendar']]
 col_share_calendar = db[cfg['db']['col_share_calendar']]
 
