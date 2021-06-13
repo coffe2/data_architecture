@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>service &mdash; data_architecture  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="top" title="data_architecture  documentation" href="../index.html" />
+    <link rel="up" title="모듈 코드" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for service</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">user</span><span class="p">,</span> <span class="n">mylogger</span><span class="p">,</span> <span class="n">myconfig</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">pdb</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="c1"># create a logger.</span>
+<span class="n">project_root_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DATA_ARCHITECTURE&quot;</span><span class="p">)</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">myconfig</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="s1">&#39;{}/share/calendar.config&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">project_root_path</span><span class="p">))</span>
+<span class="n">log_directory</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;logger&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;log_directory&#39;</span><span class="p">)</span>
+<span class="n">loggers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mylogger</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">,</span> <span class="n">log_directory</span><span class="p">)</span>
+<span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;calendar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mylogger</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="s1">&#39;calendar&#39;</span><span class="p">,</span> <span class="n">log_directory</span><span class="p">)</span>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../service.html#service.login">[문서]</a><span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;login API function.</span>
+
+<span class="sd">    Specification can be found in `API.md` file.</span>
+
+<span class="sd">    :return: JSON serialized string containing the login result with session_id</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span>
+    <span class="n">passwd</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;passwd&#39;</span><span class="p">)</span>
+    <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;{}: login&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+
+    <span class="n">session_key</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">passwd</span><span class="p">,</span> <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">])</span>
+    <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;{}: session_key = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">session_key</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">session_key</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;msg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Failed to login&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;session_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session_key</span><span class="p">[</span><span class="s2">&quot;session_id&quot;</span><span class="p">]</span>
+
+    <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;{}: login result = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">ret</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+	
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/calendar&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="calendar"><a class="viewcode-back" href="../service.html#service.calendar">[문서]</a><span class="k">def</span> <span class="nf">calendar</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;caldendar API function.</span>
+
+<span class="sd">    Specification can be found in `API.md` file.</span>
+
+<span class="sd">    :return: JSON serialized string containing the result with session_id</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">session_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;session_id&#39;</span><span class="p">)</span>
+    <span class="n">request_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;request_type&#39;</span><span class="p">)</span>
+    <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;calendar&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;{}: calendar request type = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">session_id</span><span class="p">,</span> <span class="n">request_type</span><span class="p">))</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">request_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="s1">&#39;show&#39;</span><span class="p">]:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{}: Invalid request type = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">session_id</span><span class="p">,</span> <span class="n">request_type</span><span class="p">)</span>
+        <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;calendar&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;msg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="n">what_time_is_it</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">doc_user</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">check_session</span><span class="p">(</span><span class="n">session_id</span><span class="p">,</span>
+            <span class="n">what_time_is_it</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">doc_user</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{}: Invalid session&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">session_id</span><span class="p">)</span>
+        <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;calendar&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;msg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request_type</span> <span class="o">==</span> <span class="s1">&#39;add&#39;</span><span class="p">:</span>
+        <span class="n">schedule</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;schedule&#39;</span><span class="p">)</span>
+        <span class="n">added_check</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">add_schedule</span><span class="p">(</span><span class="n">doc_user</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span>
+                <span class="n">schedule</span><span class="p">,</span> <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;calendar&#39;</span><span class="p">])</span>
+        <span class="n">new_session</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">generate_session</span><span class="p">(</span><span class="n">doc_user</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">added_check</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{}: {} schedule added&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">session_id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">schedule</span><span class="p">))</span>
+            <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;msg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_session</span><span class="p">[</span><span class="s2">&quot;session_id&quot;</span><span class="p">]</span>
+    
+    <span class="k">elif</span> <span class="n">request_type</span> <span class="o">==</span> <span class="s1">&#39;show&#39;</span><span class="p">:</span>
+        <span class="n">day_schedule</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">show_daySchedule</span><span class="p">(</span><span class="n">doc_user</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span>
+                <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;calendar&#39;</span><span class="p">])</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;schedule&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">day_schedule</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">new_session</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">generate_session</span><span class="p">(</span><span class="n">doc_user</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_session</span><span class="p">[</span><span class="s2">&quot;session_id&quot;</span><span class="p">]</span>
+
+    <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;calendar&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;{}: day schedule = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">session_id</span><span class="p">,</span> <span class="n">ret</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="web_login"><a class="viewcode-back" href="../service.html#service.web_login">[문서]</a><span class="k">def</span> <span class="nf">web_login</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;index.html&quot;</span><span class="p">)</span></div>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/handle-login&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="handle_login"><a class="viewcode-back" href="../service.html#service.handle_login">[문서]</a><span class="k">def</span> <span class="nf">handle_login</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Login function for web service.</span>
+
+<span class="sd">    :return: HTML document (render_template() result)</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span>
+    <span class="n">passwd</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;passwd&#39;</span><span class="p">)</span>
+    <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;{}: login(web)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+           <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+           <span class="s2">&quot;service_type&quot;</span><span class="p">:</span> <span class="s2">&quot;login&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+
+    <span class="n">session_key</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">passwd</span><span class="p">,</span> <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">])</span>
+    <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;{}: session_key = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">session_key</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">session_key</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;msg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Failed to login&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;session_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session_key</span><span class="p">[</span><span class="s2">&quot;session_id&quot;</span><span class="p">]</span>
+
+    <span class="n">loggers</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;{}: login(web) result = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">ret</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;login_failed.html&quot;</span><span class="p">)</span>
+
+    <span class="n">ret_json</span> <span class="o">=</span> <span class="n">json_util</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;calendar.html&quot;</span><span class="p">,</span>
+            <span class="n">session_info</span><span class="o">=</span><span class="n">ret_json</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">모듈 코드</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>빠른 검색</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="바로 가기" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    모듈, 클래스 또는 함수 이름을 입력하십시오.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

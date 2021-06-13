@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>src package &mdash; data_architecture  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="data_architecture  documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="src-package">
+<h1>src package<a class="headerlink" href="#src-package" title="제목 주소">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="제목 주소">¶</a></h2>
+</div>
+<div class="section" id="module-src.myconfig">
+<span id="src-myconfig-module"></span><h2>src.myconfig module<a class="headerlink" href="#module-src.myconfig" title="제목 주소">¶</a></h2>
+<dl class="function">
+<dt id="src.myconfig.get_config">
+<code class="descclassname">src.myconfig.</code><code class="descname">get_config</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/myconfig.html#get_config"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.myconfig.get_config" title="정의 주소">¶</a></dt>
+<dd><p>Get config parser.
+:param filepath: a config filepath to read.
+:type filepath: str
+:return: a parser (Use it like a &#8220;dictionary&#8221;)
+:rtype: configparser.SafeConfigParser</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.mylogger">
+<span id="src-mylogger-module"></span><h2>src.mylogger module<a class="headerlink" href="#module-src.mylogger" title="제목 주소">¶</a></h2>
+<dl class="function">
+<dt id="src.mylogger.get_logger">
+<code class="descclassname">src.mylogger.</code><code class="descname">get_logger</code><span class="sig-paren">(</span><em>name</em>, <em>log_directory=''</em>, <em>log_to_stream=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/mylogger.html#get_logger"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.mylogger.get_logger" title="정의 주소">¶</a></dt>
+<dd><p>Create a new logger and return it.
+:param name: name of logger.
+:type name: str
+:param log_directory: a path to make log files. If it is empty, then it does not write log files.
+:type log_directory: str
+:param log_to_stream: whether if we want to write log messages to streams (e.g., screen).
+:type log_to_stream: bool
+:return: a logger
+:rtype: logging.Logger</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.user">
+<span id="src-user-module"></span><h2>src.user module<a class="headerlink" href="#module-src.user" title="제목 주소">¶</a></h2>
+<dl class="function">
+<dt id="src.user.add_schedule">
+<code class="descclassname">src.user.</code><code class="descname">add_schedule</code><span class="sig-paren">(</span><em>doc_user</em>, <em>date</em>, <em>schedule</em>, <em>logger</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/user.html#add_schedule"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.user.add_schedule" title="정의 주소">¶</a></dt>
+<dd><p>add one or more schedule to the user&#8217;s list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><ul class="first simple">
+<li><strong>doc_user</strong> &#8211; user document (DB)</li>
+<li><strong>date</strong> (<em>str</em>) &#8211; date</li>
+<li><strong>event</strong> (<em>list</em>) &#8211; event list to add</li>
+<li><strong>logger</strong> (<em>logging.Logger</em>) &#8211; logger instance</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">반환:</th><td class="field-body"><p class="first">True or False added day events</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">반환 형식:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.user.check_passwd">
+<code class="descclassname">src.user.</code><code class="descname">check_passwd</code><span class="sig-paren">(</span><em>userid</em>, <em>passwd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/user.html#check_passwd"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.user.check_passwd" title="정의 주소">¶</a></dt>
+<dd><p>Check if the password is correct or not.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><ul class="first simple">
+<li><strong>userid</strong> (<em>str</em>) &#8211; user ID</li>
+<li><strong>passwd</strong> (<em>str</em>) &#8211; password</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">반환:</th><td class="field-body"><p class="first">user document (DB) or False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">반환 형식:</th><td class="field-body"><p class="first last">dict or bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.user.check_professor">
+<code class="descclassname">src.user.</code><code class="descname">check_professor</code><span class="sig-paren">(</span><em>doc_user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/user.html#check_professor"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.user.check_professor" title="정의 주소">¶</a></dt>
+<dd><p>return check you are a professor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><strong>doc_user</strong> &#8211; user document (DB)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">반환:</th><td class="field-body">True or False</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">반환 형식:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.user.check_session">
+<code class="descclassname">src.user.</code><code class="descname">check_session</code><span class="sig-paren">(</span><em>session_id</em>, <em>timestamp</em>, <em>elapse_limit=600</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/user.html#check_session"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.user.check_session" title="정의 주소">¶</a></dt>
+<dd><p>Check if the session is valid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><ul class="first simple">
+<li><strong>session_id</strong> (<em>str</em>) &#8211; session ID</li>
+<li><strong>timestamp</strong> (<em>float</em>) &#8211; timestamp (usually, this is current timestamp)</li>
+<li><strong>elapse_limit</strong> (<em>int</em>) &#8211; time limit for checking session validity</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">반환:</th><td class="field-body"><p class="first">user document (DB) or False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">반환 형식:</th><td class="field-body"><p class="first last">dict or bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.user.convert_to_SHA256">
+<code class="descclassname">src.user.</code><code class="descname">convert_to_SHA256</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/user.html#convert_to_SHA256"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.user.convert_to_SHA256" title="정의 주소">¶</a></dt>
+<dd><p>Convert a given string to SHA256-encoded string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><strong>x</strong> (<em>str</em>) &#8211; arbitrary string.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">반환:</th><td class="field-body">SHA256 encoded string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">반환 형식:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.user.convert_to_bson_timestamp">
+<code class="descclassname">src.user.</code><code class="descname">convert_to_bson_timestamp</code><span class="sig-paren">(</span><em>ts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/user.html#convert_to_bson_timestamp"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.user.convert_to_bson_timestamp" title="정의 주소">¶</a></dt>
+<dd><p>Convert a given timestamp (of datetime) to bson Timestamp.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><strong>ts</strong> (<em>float</em>) &#8211; datetime timestamp</td>
+</tr>
+<tr class="field-even field"><th class="field-name">반환:</th><td class="field-body">bson Timestamp</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">반환 형식:</th><td class="field-body">bson.timestamp.Timestamp</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.user.generate_session">
+<code class="descclassname">src.user.</code><code class="descname">generate_session</code><span class="sig-paren">(</span><em>doc_user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/user.html#generate_session"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.user.generate_session" title="정의 주소">¶</a></dt>
+<dd><p>Generate session key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><strong>doc_user</strong> (<em>dict</em>) &#8211; user&#8217;s document (DB)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">반환:</th><td class="field-body">session key dictionary</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">반환 형식:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.user.login">
+<code class="descclassname">src.user.</code><code class="descname">login</code><span class="sig-paren">(</span><em>user_id</em>, <em>passwd</em>, <em>logger</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/user.html#login"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.user.login" title="정의 주소">¶</a></dt>
+<dd><p>Login.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> (<em>str</em>) &#8211; user ID</li>
+<li><strong>passwd</strong> (<em>str</em>) &#8211; password</li>
+<li><strong>logger</strong> (<em>logging.Logger</em>) &#8211; Logger instance</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">반환:</th><td class="field-body"><p class="first">session_key or False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">반환 형식:</th><td class="field-body"><p class="first last">dict or bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.user.show_daySchedule">
+<code class="descclassname">src.user.</code><code class="descname">show_daySchedule</code><span class="sig-paren">(</span><em>doc_user</em>, <em>date</em>, <em>logger</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/user.html#show_daySchedule"><span class="viewcode-link">[소스]</span></a><a class="headerlink" href="#src.user.show_daySchedule" title="정의 주소">¶</a></dt>
+<dd><p>return schedule for the date selected by the user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">매개 변수:</th><td class="field-body"><ul class="first simple">
+<li><strong>doc_user</strong> &#8211; user document (DB)</li>
+<li><strong>date</strong> (<em>datetime</em>) &#8211; selected date</li>
+<li><strong>logger</strong> (<em>logging.Logger</em>) &#8211; logger instance</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">반환:</th><td class="field-body"><p class="first">a list of chosen date schedules</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">반환 형식:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="제목 주소">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">목차</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">src package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-src.myconfig">src.myconfig module</a></li>
+<li><a class="reference internal" href="#module-src.mylogger">src.mylogger module</a></li>
+<li><a class="reference internal" href="#module-src.user">src.user module</a></li>
+<li><a class="reference internal" href="#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>현재 문서</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/src.txt"
+            rel="nofollow">소스 코드를 보려면</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>빠른 검색</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="바로 가기" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    모듈, 클래스 또는 함수 이름을 입력하십시오.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/src.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
